@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class PIDNavXTurn extends Command {
 
-	double motorSpeed = 0.2;
+	double motorSpeed = 0.55;
 	double direction = 0;
 	double currentAngle = 0;
 	double error = 0;
@@ -35,7 +35,7 @@ public class PIDNavXTurn extends Command {
 
 	protected void initialize() {
 		// Robot.navX.resetNavX();
-		motorSpeed = 0.2;
+		motorSpeed = 0.55;
 		currentAngle = 0;
 		error = 0;
 		pAdjustment = 0;

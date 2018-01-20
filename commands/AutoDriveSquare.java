@@ -12,13 +12,13 @@ public class AutoDriveSquare extends CommandGroup {
     	//addSequential(new ResetDriveEncoders()); //DO NOT RESET THE NAVX DURING AN AUTO COMMAND IT WILL NOT FUNCTION PROPERLY!
     	addSequential(new WaitCommand(0.25));
     	addSequential(new LEDsOn());
-    	addSequential(new PIDDriveStraight(0.15, 0, 20));
+    	addSequential(new PIDDriveStraight(.25, 0, 90));
     	addSequential(new PIDNavXTurn(90));
-    	addSequential(new PIDDriveStraight(0.15, 0, 20));
+    	addSequential(new PIDDriveStraight(.25, 0, 90));
     	addSequential(new PIDNavXTurn(90));
-    	addSequential(new PIDDriveStraight(0.15, 0, 20));
+    	addSequential(new PIDDriveStraight(.25, 0, 90));
     	addSequential(new PIDNavXTurn(90));
-    	addSequential(new PIDDriveStraight(0.15, 0, 20));
+    	addSequential(new PIDDriveStraight(.25, 0, 90));
     	addSequential(new PIDNavXTurn(90));
     	addSequential(new LEDsOff());
     	addSequential(new WaitCommand(.2));

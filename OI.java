@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2906.robot;
 
-import org.usfirst.frc.team2906.robot.commands.LEDsOff;
-import org.usfirst.frc.team2906.robot.commands.LEDsOn;
 import org.usfirst.frc.team2906.robot.commands.*;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,6 +15,9 @@ public class OI {
 	public JoystickButton trigr1;
 	public JoystickButton trigr2;
 	public JoystickBase pov;
+	public JoystickButton jack;
+	public JoystickButton jill;
+	public JoystickButton dann;
 	
 	public OI(){
 		joystick1 = new Joystick(0);
@@ -30,6 +31,16 @@ public class OI {
 		trigr2.whileHeld(new CameraRotatePOV());
 		trigr2.whenReleased(new CameraStopRotation());
 		//pov = new JoystickButton(joystick1,);
+		
+		jack = new JoystickButton(joystick1, 11);
+		jack.whenPressed(new PistonExtends());
+		
+		jill = new JoystickButton(joystick1, 12);
+		jill.whenPressed(new PistonReverses());
+		
+		dann = new JoystickButton(joystick1, 3);
+		dann.whileHeld(new PistonsOff());
+		
 	}
 	public Joystick getJoystick1() {
         return joystick1;

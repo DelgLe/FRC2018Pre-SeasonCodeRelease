@@ -1,17 +1,25 @@
 package org.usfirst.frc.team2906.robot;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.TalonControlMode;
+import org.usfirst.frc.team2906.robot.subsystems.Pneumatics;
+
 import com.kauailabs.navx.frc.AHRS;
+import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -21,16 +29,20 @@ import edu.wpi.first.wpilibj.VictorSP;
  */
 public class RobotMap {
 	
-	public static RobotDrive driveWC;
-	public static CANTalon driveLeft;
-	public static CANTalon driveRight;
-	public static CANTalon leftSlave;
-	public static CANTalon rightSlave;
+	public static DifferentialDrive driveWC;
+	public static WPI_TalonSRX driveLeft;
+	public static WPI_TalonSRX driveRight;
+	public static WPI_TalonSRX leftSlave;
+	public static WPI_TalonSRX rightSlave;
 	public static VictorSP cameraPivot;
+	public static Pneumatics pneumatics;
 	public static Relay visionLEDs;
 	public static AHRS navX;
+	public static Compressor compressor;
 	//public static ADXRS450_Gyro gyro;
 	public static CameraServer cam1;
+	public static DoubleSolenoid pistonI;
+	public static Solenoid pistonII;
 	
 	public static final int kGyroPort = 0;
 	
@@ -42,7 +54,7 @@ public class RobotMap {
 	
 	public static final double sensitivity = 0.05;
 	public static final double rsensitivity = .25;
-	public static final double driveMAX = 0.2;
+	public static final double driveMAX = 1.0;
 	
 	public static final double PIDNavxTurnGainMultiplier = 0.1;
 	public static final double PIDNavxTurnP = 0.5;
@@ -60,16 +72,16 @@ public class RobotMap {
 	
 	public static void init(){
 		
-		driveLeft = new CANTalon (4);
-		driveRight = new CANTalon (1);
-		leftSlave = new CANTalon(3);
-		rightSlave = new CANTalon(2);
+		driveLeft = new WPI_TalonSRX (4);
+		driveRight = new WPI_TalonSRX (1);
+		leftSlave = new WPI_TalonSRX(3);
+		rightSlave = new WPI_TalonSRX(2);
 		
-		rightSlave.changeControlMode(TalonControlMode.Follower);
-		rightSlave.set(1);
+		//rightSlave.follow(driveRight);
+		SpeedControllerGroup m_right = new SpeedControllerGroup(driveRight, rightSlave);
+		SpeedControllerGroup m_left = new SpeedControllerGroup(driveLeft, leftSlave);
 		
-		leftSlave.changeControlMode(TalonControlMode.Follower);
-		leftSlave.set(4);
+		//leftSlave.follow(driveLeft);
 		
 		cameraPivot = new VictorSP(0);
 		
@@ -80,12 +92,17 @@ public class RobotMap {
 		driveTrainEncoderLeft = new Encoder(0, 1);
 		driveTrainEncoderRight = new Encoder(2, 3);
 		
-		driveWC = new RobotDrive(driveLeft, driveRight);
-		driveWC.setSafetyEnabled(false);
+		driveWC = new DifferentialDrive(m_left, m_right); 
+		/*driveWC.setSafetyEnabled(false);
         driveWC.setExpiration(0.1);
         driveWC.setSensitivity(sensitivity);
         driveWC.setMaxOutput(driveMAX);
-        driveWC.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+        driveWC.setInvertedMotor(DifferentialDrive.MotorType.kRearLeft, true);*/
+        
+        compressor = new Compressor(0);
+        
+        pistonI = new DoubleSolenoid(0, 0, 1);
+        pistonII = new Solenoid(0, 2);
         
         CameraServer server1 = CameraServer.getInstance();
         server1.startAutomaticCapture();

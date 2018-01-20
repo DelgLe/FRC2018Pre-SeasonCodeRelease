@@ -7,20 +7,24 @@ import org.usfirst.frc.team2906.robot.commands.DriveWithJoysticksArcade;
 import org.usfirst.frc.team2906.robot.commands.DriveWithJoysticksMirror;
 
 import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 
 /**
  *
  */
 public class DriveTrain extends Subsystem {
 	
-	private final RobotDrive driveWC = RobotMap.driveWC;
+	private final DifferentialDrive driveWC = RobotMap.driveWC;
 
-	CANTalon left = RobotMap.driveLeft;
-	CANTalon right = RobotMap.driveRight;
+	WPI_TalonSRX left = RobotMap.driveLeft;
+	WPI_TalonSRX right = RobotMap.driveRight;
 
 	Encoder driveTrainEncoderLeft = RobotMap.driveTrainEncoderLeft;
 	Encoder driveTrainEncoderRight = RobotMap.driveTrainEncoderRight;
@@ -94,8 +98,8 @@ public class DriveTrain extends Subsystem {
 		right.set(0);
 	}
 	
-	public void arcadeDrive(double move, double rotate){
-		driveWC.arcadeDrive(move, rotate);
+	public void arcadeDrive(double xSpeed, double zRotate){
+		driveWC.arcadeDrive(xSpeed, zRotate);
 	}
 	
 	public void tankDrive(double left, double right){
@@ -118,11 +122,11 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public double getVoltageL(){
-		return left.getOutputVoltage();
+		return left.getMotorOutputVoltage();
 	}
 	
 	public double getVoltageR(){
-		return right.getOutputVoltage();
+		return right.getMotorOutputVoltage();
 	}
 
 	public void initDefaultCommand() {

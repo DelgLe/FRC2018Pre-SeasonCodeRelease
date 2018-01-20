@@ -6,6 +6,7 @@ import org.usfirst.frc.team2906.robot.commands.TestAuto;
 import org.usfirst.frc.team2906.robot.subsystems.CameraPivotPOV;
 import org.usfirst.frc.team2906.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2906.robot.subsystems.NavX;
+import org.usfirst.frc.team2906.robot.subsystems.Pneumatics;
 import org.usfirst.frc.team2906.robot.subsystems.VisionLEDs;
 import org.usfirst.frc.team2906.robot.commands.*;
 
@@ -22,6 +23,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveWC;
 	public static CameraPivotPOV camPiv;
 	public static NavX navX;
+	public static Pneumatics pneumatics;
 	//public static gAngleSPI gyro;
 	public static VisionLEDs leds;
 	public static OI oi;
@@ -48,7 +50,7 @@ public class Robot extends IterativeRobot {
 	final String auto20InchTest = "Drive 20 Inches For Testable Data";
 	final String auto20InchTestReturn = "Return To Start For Re-Test";
 
-	String[] autoChooserList = { noAuto, testAuto, autoDriveStraight, autoDriveSquare, autoTurn90, autoTurn180, autoDriveTurnDrive, auto20InchTest, auto20InchTestReturn };
+	//String[] autoChooserList = { noAuto, testAuto, autoDriveStraight, autoDriveSquare, autoTurn90, autoTurn180, autoDriveTurnDrive, auto20InchTest, auto20InchTestReturn };
 
 	@Override
 	public void robotInit() {
@@ -57,6 +59,7 @@ public class Robot extends IterativeRobot {
 		driveWC = new DriveTrain();
 		camPiv = new CameraPivotPOV();
 		navX = new NavX();
+		pneumatics = new Pneumatics();
 		//gyro = new gAngleSPI();
 		leds = new VisionLEDs();
 		oi = new OI();
@@ -64,7 +67,7 @@ public class Robot extends IterativeRobot {
 		NetworkTable table = NetworkTable.getTable("SmartDashboard");
 		table.putStringArray("Auto List", autoChooserList);
 
-		autoChooser = new SendableChooser();
+		//autoChooser = new SendableChooser();
 		autoChooser.addDefault("Default, No Auto", new NoAuto());
 		autoChooser.addObject("Test Auto", new TestAuto());
 		autoChooser.addObject("Drive Straight PID Auto", new AutoDriveStraight());
@@ -78,6 +81,14 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto mode", autoChooser);
 		
 		SmartDashboard.putData("TurnTeleTest", new AutoTurn90());
+		
+		NetworkTable table = NetworkTable.getTable("limelight");
+		double targetOffsetAngle_Horizontal = table.getNumber("tx", 0);
+		double targetOffsetAngle_Vertical = table.getNumber("ty", 0);
+		double targetArea = table.getNumber("ta", 0);
+		double targetSkew = table.getNumber("ts", 0);
+		
+		
 	}
 
 	@Override
